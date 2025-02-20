@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: grey;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .stopwatch {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .laps {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background 0.3s;
+        }
+        button:nth-of-type(1) { background: #28a745; } /* Start button - Green */
+        button:nth-of-type(1):hover { background: #218838; }
+        button:nth-of-type(2) { background: #dc3545; } /* Stop button - Red */
+        button:nth-of-type(2):hover { background: #c82333; }
+        button:nth-of-type(3) { background: #007bff; } /* Reset button - Blue */
+        button:nth-of-type(3):hover { background: #0056b3; }
+        button:nth-of-type(4) { background: #ff9800; } /* Lap button - Orange */
+        button:nth-of-type(4):hover { background: #e68900; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stopwatch</h1>
+        <div class="stopwatch">00:00:00.000</div>
+        <button onclick="startStopwatch()">Start</button>
+        <button onclick="stopStopwatch()">Stop</button>
+        <button onclick="resetStopwatch()">Reset</button>
+        <button onclick="recordLap()">Lap</button>
+        <div class="laps"></div>
+    </div>
+
+    <script>
+        let timer;
+        let isRunning = false;
+        let milliseconds = 0, seconds = 0, minutes = 0, hours = 0;
+
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(updateStopwatch, 10);
+            }
+        }
+
+        function stopStopwatch() {
+            isRunning = false;
+            clearInterval(timer);
+        }
+
+        function resetStopwatch() {
+            stopStopwatch();
+            milliseconds = 0;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            updateDisplay();
+            document.querySelector(".laps").innerHTML = "";
+        }
+
+        function updateStopwatch() {
+            milliseconds += 10;
+            if (milliseconds === 1000) {
+                milliseconds = 0;
+                seconds++;
+            }
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+            if (minutes === 60) {
+                minutes = 0;
+                hours++;
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.querySelector(".stopwatch").innerText = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`;
+        }
+
+        function recordLap() {
+            const lapTime = document.querySelector(".stopwatch").innerText;
+            const lapContainer = document.querySelector(".laps");
+            const lapElement = document.createElement("div");
+            lapElement.innerText = lapTime;
+            lapContainer.appendChild(lapElement);
+        }
+    </script>
+</body>
+</html>
